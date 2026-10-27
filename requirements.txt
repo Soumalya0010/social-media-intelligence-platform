@@ -1,0 +1,29 @@
+# Large-Scale Social Media Intelligence Platform
+# Required Tech Stack: Reddit/YouTube APIs, Spark NLP, BERTopic, NetworkX, Neo4j, Elasticsearch, Kibana
+
+# Data Collection (Step 1)
+requests>=2.31.0
+
+# Text Preprocessing & Cleaning (Step 2)
+emoji>=2.10.0
+langdetect>=1.0.9
+
+# Multilingual Sentiment Analysis (Step 3)
+pyspark>=3.5.0
+spark-nlp>=5.5.0
+
+# Topic Modeling (Step 4)
+bertopic>=0.16.0
+sentence-transformers>=2.2.2
+
+# Graph Analysis & Influencer Ranking (Step 5)
+networkx>=3.2.0
+neo4j>=5.18.0
+
+# Misinformation Classifier (Step 6)
+scikit-learn>=1.4.0
+pandas>=2.2.0
+numpy>=1.26.0
+
+# Indexing & Dashboard (Step 7)
+elasticsearch>=8.12.0

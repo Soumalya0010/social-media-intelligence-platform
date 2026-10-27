@@ -1,0 +1,256 @@
+{
+  "kind": "youtube#videoListResponse",
+  "etag": "etag_reference_response_2026",
+  "pageInfo": {
+    "totalResults": 3,
+    "resultsPerPage": 3
+  },
+  "items": [
+    {
+      "kind": "youtube#video",
+      "id": "yt_vid_0001",
+      "snippet": {
+        "publishedAt": "2026-10-27T19:12:55.368510+00:00",
+        "channelId": "UC_TechInsights_id",
+        "title": "State of Generative AI in 2026: Trends, Models, & Reality (Part 1)",
+        "description": "In this video we review deep neural networks, multimodal transformers, and real-world deployment challenges! 🤖💡",
+        "channelTitle": "TechInsights",
+        "tags": [
+          "machine learning",
+          "technology",
+          "data science",
+          "nlp"
+        ],
+        "categoryId": "28"
+      },
+      "statistics": {
+        "viewCount": "450000",
+        "likeCount": "24000",
+        "commentCount": "3"
+      },
+      "commentThreads": {
+        "kind": "youtube#commentThreadListResponse",
+        "items": [
+          {
+            "kind": "youtube#commentThread",
+            "id": "comment_yt_vid_0001_0",
+            "snippet": {
+              "videoId": "yt_vid_0001",
+              "topLevelComment": {
+                "kind": "youtube#comment",
+                "id": "comment_top_yt_vid_0001_0",
+                "snippet": {
+                  "authorDisplayName": "ai_dev",
+                  "authorProfileImageUrl": "https://example.com/avatar/ai_dev",
+                  "textOriginal": "Excellent breakdown @TechInsights! Very insightful analysis on this topic.",
+                  "likeCount": 42,
+                  "publishedAt": "2026-10-27T19:12:55.368510+00:00"
+                }
+              }
+            }
+          },
+          {
+            "kind": "youtube#commentThread",
+            "id": "comment_yt_vid_0001_1",
+            "snippet": {
+              "videoId": "yt_vid_0001",
+              "topLevelComment": {
+                "kind": "youtube#comment",
+                "id": "comment_top_yt_vid_0001_1",
+                "snippet": {
+                  "authorDisplayName": "student_coder",
+                  "authorProfileImageUrl": "https://example.com/avatar/student_coder",
+                  "textOriginal": "Excellent breakdown @TechInsights! Very insightful analysis on this topic.",
+                  "likeCount": 37,
+                  "publishedAt": "2026-10-27T19:12:55.368510+00:00"
+                }
+              }
+            }
+          },
+          {
+            "kind": "youtube#commentThread",
+            "id": "comment_yt_vid_0001_2",
+            "snippet": {
+              "videoId": "yt_vid_0001",
+              "topLevelComment": {
+                "kind": "youtube#comment",
+                "id": "comment_top_yt_vid_0001_2",
+                "snippet": {
+                  "authorDisplayName": "sarah_ds",
+                  "authorProfileImageUrl": "https://example.com/avatar/sarah_ds",
+                  "textOriginal": "Excellent breakdown @TechInsights! Very insightful analysis on this topic.",
+                  "likeCount": 32,
+                  "publishedAt": "2026-10-27T19:12:55.368510+00:00"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "kind": "youtube#video",
+      "id": "yt_vid_0002",
+      "snippet": {
+        "publishedAt": "2026-10-27T13:12:55.368510+00:00",
+        "channelId": "UC_HealthCheckOfficial_id",
+        "title": "Debunking Viral Health Misinformation & Pseudoscience (Part 2)",
+        "description": "Medical doctors break down false claims circulating on video platforms regarding miracle cures and conspiracy theories ⚠️.",
+        "channelTitle": "HealthCheckOfficial",
+        "tags": [
+          "machine learning",
+          "technology",
+          "data science",
+          "nlp"
+        ],
+        "categoryId": "28"
+      },
+      "statistics": {
+        "viewCount": "321500",
+        "likeCount": "18620",
+        "commentCount": "3"
+      },
+      "commentThreads": {
+        "kind": "youtube#commentThreadListResponse",
+        "items": [
+          {
+            "kind": "youtube#commentThread",
+            "id": "comment_yt_vid_0002_0",
+            "snippet": {
+              "videoId": "yt_vid_0002",
+              "topLevelComment": {
+                "kind": "youtube#comment",
+                "id": "comment_top_yt_vid_0002_0",
+                "snippet": {
+                  "authorDisplayName": "truth_seeker",
+                  "authorProfileImageUrl": "https://example.com/avatar/truth_seeker",
+                  "textOriginal": "Excellent breakdown @HealthCheckOfficial! Very insightful analysis on this topic.",
+                  "likeCount": 42,
+                  "publishedAt": "2026-10-27T13:12:55.368510+00:00"
+                }
+              }
+            }
+          },
+          {
+            "kind": "youtube#commentThread",
+            "id": "comment_yt_vid_0002_1",
+            "snippet": {
+              "videoId": "yt_vid_0002",
+              "topLevelComment": {
+                "kind": "youtube#comment",
+                "id": "comment_top_yt_vid_0002_1",
+                "snippet": {
+                  "authorDisplayName": "citizen_x",
+                  "authorProfileImageUrl": "https://example.com/avatar/citizen_x",
+                  "textOriginal": "Excellent breakdown @HealthCheckOfficial! Very insightful analysis on this topic.",
+                  "likeCount": 37,
+                  "publishedAt": "2026-10-27T13:12:55.368510+00:00"
+                }
+              }
+            }
+          },
+          {
+            "kind": "youtube#commentThread",
+            "id": "comment_yt_vid_0002_2",
+            "snippet": {
+              "videoId": "yt_vid_0002",
+              "topLevelComment": {
+                "kind": "youtube#comment",
+                "id": "comment_top_yt_vid_0002_2",
+                "snippet": {
+                  "authorDisplayName": "fact_checker",
+                  "authorProfileImageUrl": "https://example.com/avatar/fact_checker",
+                  "textOriginal": "Excellent breakdown @HealthCheckOfficial! Very insightful analysis on this topic.",
+                  "likeCount": 32,
+                  "publishedAt": "2026-10-27T13:12:55.368510+00:00"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "kind": "youtube#video",
+      "id": "yt_vid_0003",
+      "snippet": {
+        "publishedAt": "2026-10-27T07:12:55.368510+00:00",
+        "channelId": "UC_GraphTutor_id",
+        "title": "Building Large-Scale Graph Networks with Neo4j and Python (Part 3)",
+        "description": "Step by step tutorial on building user interaction networks, calculating PageRank and community clusters 🌐🚀.",
+        "channelTitle": "GraphTutor",
+        "tags": [
+          "machine learning",
+          "technology",
+          "data science",
+          "nlp"
+        ],
+        "categoryId": "28"
+      },
+      "statistics": {
+        "viewCount": "92000",
+        "likeCount": "6440",
+        "commentCount": "3"
+      },
+      "commentThreads": {
+        "kind": "youtube#commentThreadListResponse",
+        "items": [
+          {
+            "kind": "youtube#commentThread",
+            "id": "comment_yt_vid_0003_0",
+            "snippet": {
+              "videoId": "yt_vid_0003",
+              "topLevelComment": {
+                "kind": "youtube#comment",
+                "id": "comment_top_yt_vid_0003_0",
+                "snippet": {
+                  "authorDisplayName": "graph_geek",
+                  "authorProfileImageUrl": "https://example.com/avatar/graph_geek",
+                  "textOriginal": "Excellent breakdown @GraphTutor! Very insightful analysis on this topic.",
+                  "likeCount": 42,
+                  "publishedAt": "2026-10-27T07:12:55.368510+00:00"
+                }
+              }
+            }
+          },
+          {
+            "kind": "youtube#commentThread",
+            "id": "comment_yt_vid_0003_1",
+            "snippet": {
+              "videoId": "yt_vid_0003",
+              "topLevelComment": {
+                "kind": "youtube#comment",
+                "id": "comment_top_yt_vid_0003_1",
+                "snippet": {
+                  "authorDisplayName": "data_wiz",
+                  "authorProfileImageUrl": "https://example.com/avatar/data_wiz",
+                  "textOriginal": "Excellent breakdown @GraphTutor! Very insightful analysis on this topic.",
+                  "likeCount": 37,
+                  "publishedAt": "2026-10-27T07:12:55.368510+00:00"
+                }
+              }
+            }
+          },
+          {
+            "kind": "youtube#commentThread",
+            "id": "comment_yt_vid_0003_2",
+            "snippet": {
+              "videoId": "yt_vid_0003",
+              "topLevelComment": {
+                "kind": "youtube#comment",
+                "id": "comment_top_yt_vid_0003_2",
+                "snippet": {
+                  "authorDisplayName": "ai_dev",
+                  "authorProfileImageUrl": "https://example.com/avatar/ai_dev",
+                  "textOriginal": "Excellent breakdown @GraphTutor! Very insightful analysis on this topic.",
+                  "likeCount": 32,
+                  "publishedAt": "2026-10-27T07:12:55.368510+00:00"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
