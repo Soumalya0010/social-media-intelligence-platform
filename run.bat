@@ -30,10 +30,12 @@ if not exist "%VENV_PYTHON%" (
     )
 )
 
-:: If a command line parameter was passed (e.g., run.bat --run-all or run.bat --test)
+:: If a command line parameter was passed (e.g., run.bat --run-all or run.bat --test or run.bat --present)
 if not "%~1"=="" (
     if "%~1"=="--test" (
         goto RUN_TESTS
+    ) else if "%~1"=="--present" (
+        goto RUN_PRESENT
     ) else (
         goto RUN_CUSTOM
     )
@@ -43,6 +45,7 @@ if not "%~1"=="" (
 echo.
 echo Please select an operation:
 echo   [1] Run Full End-to-End Pipeline (Steps 1 to 7) [RECOMMENDED]
+echo   [P] Present Processed Data (Export CSVs, Markdown & Open Dashboard)
 echo   [2] Run Complete Automated Test Suite (21 Tests)
 echo   [3] Step 1: Collect Data (Reddit & YouTube APIs)
 echo   [4] Step 2: Clean Text, Handle Emojis, Detect Language
@@ -53,19 +56,20 @@ echo   [8] Step 6: Train LIAR Misinformation Classifier
 echo   [9] Step 7: Elasticsearch Indexing & Kibana Dashboard
 echo   [0] Exit
 echo.
-set /p CHOICE="Enter your choice [1-9, 0] (Default is 1): "
+set /p CHOICE="Enter your choice [1-9, P, 0] (Default is 1): "
 
 if "%CHOICE%"=="" set CHOICE=1
-if "%CHOICE%"=="1" goto RUN_ALL
-if "%CHOICE%"=="2" goto RUN_TESTS
-if "%CHOICE%"=="3" goto RUN_STEP1
-if "%CHOICE%"=="4" goto RUN_STEP2
-if "%CHOICE%"=="5" goto RUN_STEP3
-if "%CHOICE%"=="6" goto RUN_STEP4
-if "%CHOICE%"=="7" goto RUN_STEP5
-if "%CHOICE%"=="8" goto RUN_STEP6
-if "%CHOICE%"=="9" goto RUN_STEP7
-if "%CHOICE%"=="0" goto EXIT_PROMPT
+if /i "%CHOICE%"=="1" goto RUN_ALL
+if /i "%CHOICE%"=="P" goto RUN_PRESENT
+if /i "%CHOICE%"=="2" goto RUN_TESTS
+if /i "%CHOICE%"=="3" goto RUN_STEP1
+if /i "%CHOICE%"=="4" goto RUN_STEP2
+if /i "%CHOICE%"=="5" goto RUN_STEP3
+if /i "%CHOICE%"=="6" goto RUN_STEP4
+if /i "%CHOICE%"=="7" goto RUN_STEP5
+if /i "%CHOICE%"=="8" goto RUN_STEP6
+if /i "%CHOICE%"=="9" goto RUN_STEP7
+if /i "%CHOICE%"=="0" goto EXIT_PROMPT
 
 echo Invalid choice. Please try again.
 goto MENU
@@ -76,6 +80,24 @@ echo ====================================================================
 echo   Executing Full 7-Step Intelligence Pipeline...
 echo ====================================================================
 "%VENV_PYTHON%" main.py --run-all
+if exist "%~dp0data\processed\intelligence_dashboard.html" (
+    echo.
+    echo Opening Interactive HTML Dashboard in browser...
+    start "" "%~dp0data\processed\intelligence_dashboard.html"
+)
+goto FINISH
+
+:RUN_PRESENT
+echo.
+echo ====================================================================
+echo   Generating Presentable Formats (CSVs, Summary, HTML Dashboard)...
+echo ====================================================================
+"%VENV_PYTHON%" main.py --present
+if exist "%~dp0data\processed\intelligence_dashboard.html" (
+    echo.
+    echo Opening Interactive HTML Dashboard in browser...
+    start "" "%~dp0data\processed\intelligence_dashboard.html"
+)
 goto FINISH
 
 :RUN_TESTS
@@ -151,7 +173,10 @@ set "EXIT_CODE=%errorlevel%"
 echo.
 echo ====================================================================
 echo   Execution Finished with exit code: %EXIT_CODE%
-echo   Results and processed data are stored in: data\processed\
+echo   Presentable Artifacts:
+echo     - Interactive Dashboard: data\processed\intelligence_dashboard.html
+echo     - Executive Summary:    data\processed\EXECUTIVE_SUMMARY.md
+echo     - Structured CSV Tables: data\processed\tables\
 echo ====================================================================
 echo.
 if not "%~1"=="" exit /b %EXIT_CODE%

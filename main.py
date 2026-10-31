@@ -24,6 +24,7 @@ from graph_analysis.networkx_analyzer import run_graph_analysis
 from indexing_and_dashboard.elasticsearch_indexer import run_indexing
 from misinformation_detection.misinformation_classifier import run_misinformation_training
 from preprocessing.text_cleaner import process_raw_dataset
+from reporting.data_presenter import generate_presentable_outputs
 from sentiment_analysis.sentiment_analyzer import run_sentiment_tracking
 from topic_modeling.topic_modeler import run_topic_modeling
 
@@ -91,6 +92,12 @@ def execute_pipeline(limit_per_source: int = 15):
     index_results = run_indexing()
     logger.info(f"Step 7 Complete: Index status: {index_results['status']}, total docs: {index_results['total_documents']}.")
 
+    # -------------------------------------------------------------
+    # PRESENTATION & REPORTING: Format Processed Data Outputs
+    # -------------------------------------------------------------
+    logger.info("\n>>> GENERATING PRESENTABLE OUTPUTS (CSVs, Executive Summary, HTML Dashboard) <<<")
+    generate_presentable_outputs()
+
     elapsed = round(time.time() - start_time, 2)
     logger.info("\n" + "=" * 80)
     logger.info(f"PIPELINE COMPLETED SUCCESSFULLY IN {elapsed}s")
@@ -99,8 +106,12 @@ def execute_pipeline(limit_per_source: int = 15):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Large-Scale Social Media Intelligence Platform")
-    parser.add_argument("--run-all", action="store_true", default=True, help="Run all 7 steps in exact order")
+    parser.add_argument("--run-all", action="store_true", default=False, help="Run all 7 steps in exact order")
+    parser.add_argument("--present", action="store_true", help="Generate and display presentable reports from existing processed data")
     parser.add_argument("--limit", type=int, default=15, help="Items per source for Step 1")
     args = parser.parse_args()
 
-    execute_pipeline(limit_per_source=args.limit)
+    if args.present:
+        generate_presentable_outputs()
+    else:
+        execute_pipeline(limit_per_source=args.limit)
