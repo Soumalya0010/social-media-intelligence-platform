@@ -130,7 +130,29 @@ python misinformation_detection/misinformation_classifier.py
 
 # Step 7: Index into Elasticsearch
 python indexing_and_dashboard/elasticsearch_indexer.py
+
+# Format and generate presentable reports (CSVs, Executive Summary, HTML Dashboard)
+python main.py --present
 ```
+
+---
+
+## 📊 Presentable Data Outputs & Reports
+
+The platform automatically structures and formats all processed data outputs into presentation-ready artifacts located in `data/processed/`:
+
+1. **🌐 Interactive HTML Dashboard (`data/processed/intelligence_dashboard.html`)**:
+   - Self-contained, responsive analytics dashboard viewable in any web browser without needing a running server.
+   - Features KPI metric cards, interactive filterable tables, temporal sentiment curves, BERTopic rise/fall momentum badges, PageRank influencer leaderboards, and a misinformation audit panel.
+2. **📝 Executive Summary Report (`data/processed/EXECUTIVE_SUMMARY.md`)**:
+   - Comprehensive GitHub-flavored markdown report summarizing dataset KPIs, multilingual sentiment distributions, detected languages, dominant themes, top influencers, and model evaluation metrics.
+3. **📁 Structured CSV Tables (`data/processed/tables/`)**:
+   - `master_intelligence_dataset.csv`: Complete consolidated dataset spanning all 7 steps.
+   - `clean_posts_summary.csv`: Step 2 noise-filtered text, emoji extractions, and language tags.
+   - `sentiment_trends_temporal.csv`: Step 3 time-bucketed polarity scores and net sentiment indexes.
+   - `topic_dynamics_rise_fall.csv`: Step 4 BERTopic dynamic trajectories, velocities, and trend status.
+   - `influencer_leaderboard.csv`: Step 5 NetworkX PageRank scores, community IDs, and interaction degrees.
+   - `misinformation_audit_report.csv`: Step 6 high-risk claims audit with probability meters and classification labels.
 
 ---
 
