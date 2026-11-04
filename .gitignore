@@ -42,6 +42,7 @@ data/raw/youtube/*.json
 data/processed/*.json
 data/processed/*.ndjson
 data/processed/*.cypher
+tests/test_data/raw/*.json
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 

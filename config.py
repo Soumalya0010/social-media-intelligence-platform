@@ -14,7 +14,6 @@ REDDIT_RAW_DIR = RAW_DATA_DIR / "reddit"
 YOUTUBE_RAW_DIR = RAW_DATA_DIR / "youtube"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 MODELS_DIR = BASE_DIR / "models"
-EXPORTS_DIR = BASE_DIR / "exports"
 
 # Create directories if they do not exist
 for path in [
@@ -24,7 +23,6 @@ for path in [
     YOUTUBE_RAW_DIR,
     PROCESSED_DATA_DIR,
     MODELS_DIR,
-    EXPORTS_DIR,
 ]:
     path.mkdir(parents=True, exist_ok=True)
 

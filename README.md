@@ -1,26 +1,24 @@
 # Large-Scale Social Media Intelligence Platform
 
-[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+A comprehensive Data Science internship project implementing an end-to-end social media intelligence pipeline strictly adhering to project specifications.
 
-An enterprise-grade, end-to-end data science platform that collects massive volumes of posts from social networks, cleans text and emojis, performs multilingual transformer sentiment analysis over time, tracks dynamic topic evolution with BERTopic, builds interaction graphs in Neo4j with NetworkX PageRank influencer ranking, trains misinformation classifiers on the LIAR dataset, and indexes enriched data in Elasticsearch with pre-built Kibana dashboards.
+The platform collects real-time social conversations from Reddit and YouTube, performs text cleaning and emoji handling, executes multilingual sentiment analysis tracked over continuous time intervals, models emerging and decaying topics using BERTopic, maps interaction networks and calculates PageRank influencer scores using Neo4j and NetworkX, trains a fake-news classifier on the LIAR benchmark dataset, and indexes enriched data into Elasticsearch with Kibana dashboards for search, trends, and alerts.
 
 ---
 
-## 🛠️ Required Tech Stack
+## Required Tech Stack
 
-This project strictly utilizes the required technologies specified:
-- **Reddit & YouTube APIs**: Data ingestion respecting rate limits and terms of use.
-- **Spark NLP**: Multilingual transformer sentiment analysis and temporal tracking.
+- **Reddit & YouTube APIs**: Data collection conforming to rate limits and terms of use.
+- **Spark NLP**: Multilingual transformer sequence classification and temporal sentiment tracking.
 - **BERTopic**: Topic discovery and dynamic topic modeling (`topics_over_time`).
-- **NetworkX**: PageRank algorithm for influencer ranking and community detection.
-- **Neo4j**: Persistent graph database storing nodes (`:User`, `:Post`) and interaction relationships.
-- **Elasticsearch**: Distributed search engine with custom mappings and bulk indexing.
-- **Kibana**: Interactive dashboards for search, sentiment trends, topic evolution, and alerts.
+- **NetworkX**: Directed graph analysis, PageRank influencer scoring, and community detection.
+- **Neo4j**: Graph database for storing user interactions, posts, and replies.
+- **Elasticsearch**: Distributed search engine with custom schema mappings and bulk indexing.
+- **Kibana**: Visual dashboards for search, sentiment trends, topic evolution, and alerts.
 
 ---
 
-## 📋 Step-by-Step Pipeline (Exact Execution Order)
+## Step-by-Step Pipeline
 
 ```mermaid
 graph LR
@@ -32,165 +30,70 @@ graph LR
     S6 --> S7["7. Index & Visualize<br>(Elasticsearch & Kibana)"]
 ```
 
-1. **Step 1: Collect Data**
-   - Reddit API (`data_collection/reddit_collector.py`) and YouTube Data API v3 (`data_collection/youtube_collector.py`).
-   - Strictly enforces rate limits (exponential backoff) and terms of use (custom User-Agent headers).
-   - Stores raw, unmodified payloads in `data/raw/reddit/` and `data/raw/youtube/`.
-2. **Step 2: Clean Text**
-   - Removes noise: URLs, HTML entities, and noisy mentions (`preprocessing/text_cleaner.py`).
-   - Handles emojis: Demojizes into descriptive textual tokens preserving sentiment context.
-   - Detects language: Identifies language codes (en, es, fr, de, hi, etc.) via `langdetect`.
-   - Saves clean structured records to `data/processed/clean_posts.json`.
-3. **Step 3: Multilingual Sentiment Analysis**
-   - Multilingual transformer sequence classification using Spark NLP (`sentiment_analysis/sentiment_analyzer.py`).
-   - Evaluates sentiment scores in `[-1.0, 1.0]` across diverse languages.
-   - Tracks net sentiment indices aggregated over continuous temporal intervals (`sentiment_trends.json`).
-4. **Step 4: BERTopic Topic Modeling**
-   - Extracts semantic topic clusters and keywords (`topic_modeling/topic_modeler.py`).
-   - Dynamic Topic Modeling: Computes `topics_over_time` to identify which topics are **rising** vs. **falling**.
-5. **Step 5: User-Interaction Graph & Influencer Ranking**
-   - Ingests user interactions into Neo4j (`graph_analysis/neo4j_manager.py`) with Cypher queries.
-   - Calculates **PageRank** and runs **Community Detection** in NetworkX (`graph_analysis/networkx_analyzer.py`).
-   - Syncs PageRank scores and community IDs back to Neo4j User nodes.
-6. **Step 6: Misinformation / Fake-News Classifier**
-   - Trains a calibrated classifier on the **LIAR benchmark dataset** (`misinformation_detection/misinformation_classifier.py`).
-   - Evaluates on test split: Accuracy, Precision, Recall, F1, and Confusion Matrix.
-   - Scores incoming posts with continuous misinformation risk probabilities.
-7. **Step 7: Elasticsearch & Kibana Dashboards**
-   - Custom index schema with type mappings (`indexing_and_dashboard/elasticsearch_indexer.py`).
-   - Bulk indexes all enriched records and exports NDJSON payloads.
-   - Pre-packaged Kibana Saved Objects (`indexing_and_dashboard/kibana_dashboard.json`) for search, trends, and alerts.
+### Step 1: Collect Data (Reddit and YouTube APIs)
+- **Reddit Ingestion** (`data_collection/reddit_collector.py`): Fetches submissions and comment threads across targeted subreddits (`r/technology`, `r/datascience`, `r/machinelearning`, `r/worldnews`). Conforms strictly to Reddit API terms of use with custom `User-Agent` headers and rate limits.
+- **YouTube Ingestion** (`data_collection/youtube_collector.py`): Searches videos and retrieves metadata and comment threads using the YouTube Data API v3 while respecting quota limits.
+- **Raw Storage**: Raw, unaltered JSON payloads are preserved under `data/raw/reddit/` and `data/raw/youtube/`.
+- *(Includes offline reference datasets corresponding to Dataset Option 1 / Option 5 for development when API keys are not supplied).*
+
+### Step 2: Clean Text, Handle Emojis, and Detect Language
+- **Noise Removal** (`preprocessing/text_cleaner.py`): Strips URLs, HTML markup and entity encodings, user mentions (`@user`, `u/user`, `r/sub`), and repeated punctuation.
+- **Emoji Handling**: Demojizes emojis into textual tokens (e.g. `😊` becomes `:smiling_face_with_smiling_eyes:`) to preserve emotional semantics for downstream language models.
+- **Language Detection**: Classifies the language of each post (e.g., `en`, `es`, `fr`, `de`, `hi`) using `langdetect` with confidence metrics.
+- Output saved to `data/processed/clean_posts.json`.
+
+### Step 3: Multilingual Sentiment Analysis & Temporal Tracking
+- **Spark NLP Transformer Model** (`sentiment_analysis/sentiment_analyzer.py`): Classifies sentiment across multilingual records using transformer representations.
+- **Sentiment Scoring**: Assigns sentiment labels (`positive`, `negative`, `neutral`), continuous scores in `[-1.0, 1.0]`, and prediction confidence.
+- **Temporal Tracking**: Aggregates sentiment metrics across continuous time windows to calculate net sentiment indices:
+  $$\text{Net Sentiment Index} = \frac{\text{Positive} - \text{Negative}}{\text{Total}}$$
+- Output saved to `data/processed/posts_with_sentiment.json` and `data/processed/sentiment_trends.json`.
+
+### Step 4: BERTopic Topic Discovery & Rise and Fall Tracking
+- **Topic Extraction** (`topic_modeling/topic_modeler.py`): Utilizes BERTopic with SentenceTransformer embeddings to discover latent semantic themes and keywords across posts.
+- **Dynamic Trajectories (`topics_over_time`)**: Computes topic frequency shifts across chronological bins, calculating velocity to determine which topics are **rising** vs. **falling**.
+- Output saved to `data/processed/posts_with_topics.json` and `data/processed/topics_over_time.json`.
+
+### Step 5: User-Interaction Graph in Neo4j & NetworkX Influencer Ranking
+- **Neo4j Graph Construction** (`graph_analysis/neo4j_manager.py`): Creates `:User` and `:Post` nodes connected by `:AUTHORED`, `:REPLIED_TO`, and `:MENTIONED` relationships. Exports complete Cypher scripts (`data/processed/neo4j_graph_export.cypher`).
+- **NetworkX Analytics** (`graph_analysis/networkx_analyzer.py`):
+  - **PageRank Algorithm**: Calculates directed, weighted PageRank scores to identify high-authority influencers in the discussion network.
+  - **Community Detection**: Partitions the interaction graph using greedy modularity to discover user clusters.
+  - Syncs computed PageRank and community IDs back into user node attributes.
+- Output saved to `data/processed/posts_with_graph_metrics.json` and `data/processed/influencer_rankings.json`.
+
+### Step 6: Misinformation / Fake-News Classifier (LIAR Dataset)
+- **Dataset**: Benchmarked on the PolitiFact LIAR dataset (`data/raw/liar_dataset.tsv`). Statements are mapped into binary classification: Misinformation (`pants-fire`, `false`, `barely-true`) vs. Credible (`half-true`, `mostly-true`, `true`).
+- **Model Training** (`misinformation_detection/misinformation_classifier.py`): Trains a TF-IDF + Logistic Regression classification pipeline.
+- **Evaluation**: Evaluated on test splits (Accuracy, Precision, Recall, F1 score).
+- **Inference**: Scores social media posts with continuous misinformation risk probabilities (`[0.0, 1.0]`).
+- Output saved to `data/processed/posts_with_misinformation.json` and serialized to `models/misinformation_classifier.pkl`.
+
+### Step 7: Elasticsearch Indexing & Kibana Dashboards
+- **Elasticsearch Indexing** (`indexing_and_dashboard/elasticsearch_indexer.py`): Defines an explicit index schema mapping (`social-intelligence-posts`) with keyword, text, date, and metric properties. Bulk indexes all enriched records and exports an NDJSON bulk ingestion file (`data/processed/elasticsearch_bulk.ndjson`).
+- **Kibana Dashboards** (`indexing_and_dashboard/kibana_dashboard.json`): Pre-built Saved Objects containing:
+  1. **Full-Text Search & Post Explorer**: Keyword query and sentiment filtering table.
+  2. **Sentiment Dynamics Over Time**: Line chart tracking average sentiment and polarity over time.
+  3. **Topic Evolution (Rise & Fall)**: Dynamic histogram showing post volumes across topics over time.
+  4. **Influencer Leaderboard**: Table of ranked users by PageRank influence and community ID.
+  5. **Misinformation Alerts**: Monitoring panel highlighting flagged high-risk claims.
 
 ---
 
-## 🚀 Quickstart & Setup Guide
-
-### 1. Prerequisites
-- Python 3.11+
-- (Optional for live containers) Docker & Docker Compose
-
-### 2. Environment Setup
-```powershell
-# Clone the repository
-git clone https://github.com/your-username/social-media-intelligence-platform.git
-cd social-media-intelligence-platform
-
-# Create virtual environment
-uv venv --python 3.11
-.venv\Scripts\activate
-
-# Install dependencies
-uv pip install -r requirements.txt
-```
-
-### 3. Configure Credentials (Optional)
-Copy `.env.example` to `.env` to supply live API keys:
-```powershell
-copy .env.example .env
-```
-*(If credentials are omitted, the platform automatically switches to the included reference datasets for seamless offline demonstration).*
-
-### 4. Start Infrastructure (Docker Compose)
-To launch local Neo4j, Elasticsearch, and Kibana instances:
-```powershell
-docker compose up -d
-```
-- **Neo4j Browser**: `http://localhost:7474` (User: `neo4j`, Password: `intelligence_password`)
-- **Elasticsearch**: `http://localhost:9200`
-- **Kibana**: `http://localhost:5601`
-
----
-
-## 🏃 Running the Pipeline
-
-Execute all 7 steps end-to-end:
-```powershell
-python main.py --run-all
-```
-
-To run individual steps modularly:
-```powershell
-# Step 1: Collect raw data
-python data_collection/collector_runner.py --sources reddit youtube --limit 20
-
-# Step 2: Clean text and detect language
-python preprocessing/text_cleaner.py
-
-# Step 3: Run multilingual sentiment analysis & tracking
-python sentiment_analysis/sentiment_analyzer.py
-
-# Step 4: Run BERTopic topic modeling
-python topic_modeling/topic_modeler.py
-
-# Step 5: Build interaction graph & rank influencers
-python graph_analysis/networkx_analyzer.py
-
-# Step 6: Train LIAR misinformation classifier
-python misinformation_detection/misinformation_classifier.py
-
-# Step 7: Index into Elasticsearch
-python indexing_and_dashboard/elasticsearch_indexer.py
-
-# Format and generate presentable reports (CSVs, Executive Summary, HTML Dashboard)
-python main.py --present
-```
-
----
-
-## 📊 Presentable Data Outputs & Reports
-
-The platform automatically structures and formats all processed data outputs into presentation-ready artifacts located in `data/processed/`:
-
-1. **🌐 Interactive HTML Dashboard (`data/processed/intelligence_dashboard.html`)**:
-   - Self-contained, responsive analytics dashboard viewable in any web browser without needing a running server.
-   - Features KPI metric cards, interactive filterable tables, temporal sentiment curves, BERTopic rise/fall momentum badges, PageRank influencer leaderboards, and a misinformation audit panel.
-2. **📝 Executive Summary Report (`data/processed/EXECUTIVE_SUMMARY.md`)**:
-   - Comprehensive GitHub-flavored markdown report summarizing dataset KPIs, multilingual sentiment distributions, detected languages, dominant themes, top influencers, and model evaluation metrics.
-3. **📁 Structured CSV Tables (`data/processed/tables/`)**:
-   - `master_intelligence_dataset.csv`: Complete consolidated dataset spanning all 7 steps.
-   - `clean_posts_summary.csv`: Step 2 noise-filtered text, emoji extractions, and language tags.
-   - `sentiment_trends_temporal.csv`: Step 3 time-bucketed polarity scores and net sentiment indexes.
-   - `topic_dynamics_rise_fall.csv`: Step 4 BERTopic dynamic trajectories, velocities, and trend status.
-   - `influencer_leaderboard.csv`: Step 5 NetworkX PageRank scores, community IDs, and interaction degrees.
-   - `misinformation_audit_report.csv`: Step 6 high-risk claims audit with probability meters and classification labels.
-
----
-
-## 🧪 Running Automated Tests
-
-Run the complete test suite verifying all 7 steps:
-```powershell
-python -m unittest discover -s tests -p "test_*.py" -v
-```
-
----
-
-## 📊 Kibana Dashboard Import
-
-1. Open Kibana at `http://localhost:5601`.
-2. Navigate to **Stack Management** > **Saved Objects**.
-3. Click **Import** and select `indexing_and_dashboard/kibana_dashboard.json`.
-4. Open the **Executive Social Media Intelligence Platform Dashboard** to explore:
-   - Full-text search and filtering table
-   - Dynamic sentiment trend lines over time
-   - Rising and falling topic histograms
-   - PageRank influencer leaderboards
-   - Automated misinformation alert gauges
-
----
-
-## 📁 Repository Structure
+## Project Structure
 
 ```
 social-media-intelligence-platform/
-├── config.py                          # Global configuration and path definitions
-├── docker-compose.yml                 # Neo4j, Elasticsearch, Kibana services
-├── requirements.txt                   # Pinned dependency requirements
-├── .env.example                       # Environment variables template
+├── config.py                          # Global configuration and path settings
+├── docker-compose.yml                 # Local Neo4j, Elasticsearch, Kibana services
+├── requirements.txt                   # Project Python dependencies
+├── .env.example                       # API keys and environment variables template
 ├── main.py                            # Master 7-step pipeline orchestrator
 ├── data/
 │   ├── raw/                           # Raw API JSON payloads (Step 1)
-│   └── processed/                     # Cleaned, enriched datasets and exports
+│   │   ├── reddit/
+│   │   └── youtube/
+│   └── processed/                     # Cleaned and enriched intelligence datasets
 ├── data_collection/                   # Step 1: Reddit & YouTube Collectors
 │   ├── reddit_collector.py
 │   ├── youtube_collector.py
@@ -209,7 +112,7 @@ social-media-intelligence-platform/
 ├── indexing_and_dashboard/            # Step 7: Elasticsearch & Kibana Dashboards
 │   ├── elasticsearch_indexer.py
 │   └── kibana_dashboard.json
-├── tests/                             # Test suite for steps 1 through 7
+├── tests/                             # Unit tests for steps 1 through 7
 │   ├── test_step1_collection.py
 │   ├── test_step2_cleaning.py
 │   ├── test_step3_sentiment.py
@@ -226,5 +129,90 @@ social-media-intelligence-platform/
 
 ---
 
-## 📄 License
-MIT License. Developed for Data Science Specialization Project.
+## Setup and Installation
+
+### 1. Prerequisites
+- Python 3.11+
+- (Optional for live containers) Docker & Docker Compose
+
+### 2. Virtual Environment Setup
+```powershell
+# Navigate to project directory
+cd social-media-intelligence-platform
+
+# Create virtual environment and activate
+python -m venv .venv
+.venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### 3. API Credentials (Optional)
+If live API credentials are desired, copy `.env.example` to `.env` and fill in credentials:
+```powershell
+copy .env.example .env
+```
+*(If omitted, the platform gracefully uses realistic reference datasets for complete offline execution).*
+
+### 4. Optional Services (Neo4j, Elasticsearch, Kibana)
+To spin up local container instances:
+```powershell
+docker compose up -d
+```
+- **Neo4j Browser**: `http://localhost:7474`
+- **Elasticsearch**: `http://localhost:9200`
+- **Kibana**: `http://localhost:5601`
+
+---
+
+## Execution Guide
+
+### Run All 7 Steps End-to-End
+```powershell
+python main.py --run-all
+```
+
+### Run Individual Steps
+```powershell
+# Step 1: Collect raw data
+python data_collection/collector_runner.py --sources reddit youtube --limit 15
+
+# Step 2: Clean text, handle emojis, detect language
+python preprocessing/text_cleaner.py
+
+# Step 3: Multilingual sentiment analysis & tracking
+python sentiment_analysis/sentiment_analyzer.py
+
+# Step 4: BERTopic dynamic topic modeling
+python topic_modeling/topic_modeler.py
+
+# Step 5: Neo4j interaction graph & NetworkX PageRank
+python graph_analysis/networkx_analyzer.py
+
+# Step 6: Train LIAR misinformation classifier
+python misinformation_detection/misinformation_classifier.py
+
+# Step 7: Index into Elasticsearch
+python indexing_and_dashboard/elasticsearch_indexer.py
+```
+
+### Run Automated Tests
+```powershell
+python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+---
+
+## Kibana Dashboard Import Guide
+
+1. Open Kibana in your browser (`http://localhost:5601`).
+2. Navigate to **Management** > **Stack Management** > **Saved Objects**.
+3. Click **Import** in the top right corner.
+4. Select `indexing_and_dashboard/kibana_dashboard.json`.
+5. Open the **Social Media Intelligence Platform Dashboard** to explore:
+   - Search table for filtering posts and sentiment.
+   - Sentiment Dynamics Over Time line charts.
+   - Rising vs. falling topic histograms.
+   - Influencer leaderboard (PageRank and communities).
+   - Misinformation alert monitoring.

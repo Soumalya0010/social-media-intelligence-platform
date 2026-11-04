@@ -30,12 +30,10 @@ if not exist "%VENV_PYTHON%" (
     )
 )
 
-:: If a command line parameter was passed (e.g., run.bat --run-all or run.bat --test or run.bat --present)
+:: If a command line parameter was passed (e.g., run.bat --run-all or run.bat --test)
 if not "%~1"=="" (
     if "%~1"=="--test" (
         goto RUN_TESTS
-    ) else if "%~1"=="--present" (
-        goto RUN_PRESENT
     ) else (
         goto RUN_CUSTOM
     )
@@ -45,22 +43,20 @@ if not "%~1"=="" (
 echo.
 echo Please select an operation:
 echo   [1] Run Full End-to-End Pipeline (Steps 1 to 7) [RECOMMENDED]
-echo   [P] Present Processed Data (Export CSVs, Markdown & Open Dashboard)
 echo   [2] Run Complete Automated Test Suite (21 Tests)
-echo   [3] Step 1: Collect Data (Reddit & YouTube APIs)
+echo   [3] Step 1: Collect Data (Reddit ^& YouTube APIs)
 echo   [4] Step 2: Clean Text, Handle Emojis, Detect Language
 echo   [5] Step 3: Spark NLP Multilingual Sentiment Tracking
-echo   [6] Step 4: BERTopic Topic Modeling (Rise & Fall)
-echo   [7] Step 5: Neo4j Graph & NetworkX PageRank Ranking
+echo   [6] Step 4: BERTopic Topic Modeling (Rise ^& Fall)
+echo   [7] Step 5: Neo4j Graph ^& NetworkX PageRank Ranking
 echo   [8] Step 6: Train LIAR Misinformation Classifier
-echo   [9] Step 7: Elasticsearch Indexing & Kibana Dashboard
+echo   [9] Step 7: Elasticsearch Indexing ^& Kibana Dashboard
 echo   [0] Exit
 echo.
-set /p CHOICE="Enter your choice [1-9, P, 0] (Default is 1): "
+set /p CHOICE="Enter your choice [0-9] (Default is 1): "
 
 if "%CHOICE%"=="" set CHOICE=1
 if /i "%CHOICE%"=="1" goto RUN_ALL
-if /i "%CHOICE%"=="P" goto RUN_PRESENT
 if /i "%CHOICE%"=="2" goto RUN_TESTS
 if /i "%CHOICE%"=="3" goto RUN_STEP1
 if /i "%CHOICE%"=="4" goto RUN_STEP2
@@ -80,30 +76,12 @@ echo ====================================================================
 echo   Executing Full 7-Step Intelligence Pipeline...
 echo ====================================================================
 "%VENV_PYTHON%" main.py --run-all
-if exist "%~dp0data\processed\intelligence_dashboard.html" (
-    echo.
-    echo Opening Interactive HTML Dashboard in browser...
-    start "" "%~dp0data\processed\intelligence_dashboard.html"
-)
-goto FINISH
-
-:RUN_PRESENT
-echo.
-echo ====================================================================
-echo   Generating Presentable Formats (CSVs, Summary, HTML Dashboard)...
-echo ====================================================================
-"%VENV_PYTHON%" main.py --present
-if exist "%~dp0data\processed\intelligence_dashboard.html" (
-    echo.
-    echo Opening Interactive HTML Dashboard in browser...
-    start "" "%~dp0data\processed\intelligence_dashboard.html"
-)
 goto FINISH
 
 :RUN_TESTS
 echo.
 echo ====================================================================
-echo   Running All 21 Automated Unit & Integration Tests...
+echo   Running All 21 Automated Unit ^& Integration Tests...
 echo ====================================================================
 "%VENV_PYTHON%" -m unittest discover -s tests -p "test_*.py" -v
 goto FINISH
@@ -119,7 +97,7 @@ goto FINISH
 :RUN_STEP2
 echo.
 echo ====================================================================
-echo   Step 2: Cleaning Text, Handling Emojis & Detecting Language...
+echo   Step 2: Cleaning Text, Handling Emojis ^& Detecting Language...
 echo ====================================================================
 "%VENV_PYTHON%" preprocessing\text_cleaner.py
 goto FINISH
@@ -127,7 +105,7 @@ goto FINISH
 :RUN_STEP3
 echo.
 echo ====================================================================
-echo   Step 3: Spark NLP Multilingual Sentiment Analysis & Tracking...
+echo   Step 3: Spark NLP Multilingual Sentiment Analysis ^& Tracking...
 echo ====================================================================
 "%VENV_PYTHON%" sentiment_analysis\sentiment_analyzer.py
 goto FINISH
@@ -135,7 +113,7 @@ goto FINISH
 :RUN_STEP4
 echo.
 echo ====================================================================
-echo   Step 4: BERTopic Topic Modeling & Dynamic Trajectories...
+echo   Step 4: BERTopic Topic Modeling ^& Dynamic Trajectories...
 echo ====================================================================
 "%VENV_PYTHON%" topic_modeling\topic_modeler.py
 goto FINISH
@@ -143,7 +121,7 @@ goto FINISH
 :RUN_STEP5
 echo.
 echo ====================================================================
-echo   Step 5: Neo4j Graph & NetworkX PageRank Influencer Ranking...
+echo   Step 5: Neo4j Graph ^& NetworkX PageRank Influencer Ranking...
 echo ====================================================================
 "%VENV_PYTHON%" graph_analysis\networkx_analyzer.py
 goto FINISH
@@ -159,7 +137,7 @@ goto FINISH
 :RUN_STEP7
 echo.
 echo ====================================================================
-echo   Step 7: Elasticsearch Bulk Indexing & Kibana Dashboard Objects...
+echo   Step 7: Elasticsearch Bulk Indexing ^& Kibana Dashboard Objects...
 echo ====================================================================
 "%VENV_PYTHON%" indexing_and_dashboard\elasticsearch_indexer.py
 goto FINISH
@@ -173,10 +151,13 @@ set "EXIT_CODE=%errorlevel%"
 echo.
 echo ====================================================================
 echo   Execution Finished with exit code: %EXIT_CODE%
-echo   Presentable Artifacts:
-echo     - Interactive Dashboard: data\processed\intelligence_dashboard.html
-echo     - Executive Summary:    data\processed\EXECUTIVE_SUMMARY.md
-echo     - Structured CSV Tables: data\processed\tables\
+echo   Processed Data Artifacts (data\processed\):
+echo     - clean_posts.json
+echo     - posts_with_sentiment.json ^& sentiment_trends.json
+echo     - posts_with_topics.json ^& topics_over_time.json
+echo     - posts_with_graph_metrics.json ^& influencer_rankings.json
+echo     - posts_with_misinformation.json
+echo     - elasticsearch_bulk.ndjson
 echo ====================================================================
 echo.
 if not "%~1"=="" exit /b %EXIT_CODE%
