@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # ==========================================
   # Step 5: Neo4j Graph Database
