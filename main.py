@@ -18,6 +18,7 @@ from pathlib import Path
 
 # Add project root to sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import config
 
 from data_collection.collector_runner import run_collection
 from graph_analysis.networkx_analyzer import run_graph_analysis

@@ -8,6 +8,20 @@ from pathlib import Path
 
 # Base Paths
 BASE_DIR = Path(__file__).resolve().parent
+
+# Automatically load environment variables from .env if present
+try:
+    from dotenv import load_dotenv
+    load_dotenv(BASE_DIR / ".env", override=True)
+except ImportError:
+    pass
+
+# Ensure Java 17+ is configured for Spark NLP / PySpark
+if not os.environ.get("JAVA_HOME") or "1.8" in os.environ.get("JAVA_HOME", ""):
+    candidate_jdk = Path(r"C:\Users\shuvr\.gradle\jdks\eclipse_adoptium-17-amd64-windows.2")
+    if candidate_jdk.exists():
+        os.environ["JAVA_HOME"] = str(candidate_jdk)
+        os.environ["PATH"] = str(candidate_jdk / "bin") + os.pathsep + os.environ.get("PATH", "")
 DATA_DIR = BASE_DIR / "data"
 RAW_DATA_DIR = DATA_DIR / "raw"
 REDDIT_RAW_DIR = RAW_DATA_DIR / "reddit"

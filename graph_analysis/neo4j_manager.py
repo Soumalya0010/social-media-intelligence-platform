@@ -96,7 +96,7 @@ class Neo4jManager:
             title = (p.get("clean_text") or p.get("raw_text", ""))[:100].replace("'", "\\'")
             cypher_queries.append(
                 f"MERGE (p:Post {{id: '{pid}'}}) "
-                f"ON CREATE SET p.title = '{title}', p.score = {p.get('score', 0)}, p.source = '{p.get('source', '')}';\n"
+                f"ON CREATE SET p.title = '{title}', p.score = {p.get('score', 0)}, p.source = '{p.get('source', '')}' "
                 f"MERGE (u:User {{username: '{author}'}}) "
                 f"MERGE (u)-[:AUTHORED]->(p);"
             )
@@ -121,7 +121,9 @@ class Neo4jManager:
             try:
                 with self.driver.session() as session:
                     for query in cypher_queries:
-                        session.run(query)
+                        q_clean = query.strip().rstrip(";")
+                        if q_clean:
+                            session.run(q_clean)
                         executed_count += 1
                 logger.info(f"Successfully executed {executed_count} Cypher operations in Neo4j.")
             except Exception as e:

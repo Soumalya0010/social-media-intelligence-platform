@@ -7,9 +7,12 @@ Required Tech Stack: NetworkX
 import json
 import logging
 import re
+import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import networkx as nx
 from config import PROCESSED_DATA_DIR
