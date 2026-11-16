@@ -6,9 +6,13 @@ Required Tech Stack: Elasticsearch
 
 import json
 import logging
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+
+# Ensure project root is in sys.path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from config import (
     DATA_DIR,
@@ -100,9 +104,9 @@ class ElasticsearchIndexer:
             self.es = Elasticsearch(
                 hosts=[self.hosts],
                 basic_auth=auth,
-                request_timeout=1,
-                max_retries=0,
-                retry_on_timeout=False,
+                request_timeout=30,
+                max_retries=3,
+                retry_on_timeout=True,
             )
             if self.es.ping():
                 self.is_connected = True

@@ -26,4 +26,4 @@ pandas>=2.2.0
 numpy>=1.26.0
 
 # Indexing & Dashboard (Step 7)
-elasticsearch>=8.12.0
+elasticsearch>=8.12.0,<9.0.0
